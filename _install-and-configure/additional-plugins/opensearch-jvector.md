@@ -8,7 +8,7 @@ nav_order: 30
 
 # OpenSearch-jvector plugin
 
-The OpenSearch JVector Plugin enables running the nearest neighbor search on billions of documents across thousands of dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations. It's similarity search powers use cases such as product recommendations, fraud detection, image and video search, related document search, and more.
+The `opensearch-jvector` plugin enables running the nearest neighbor search on billions of documents across thousands of dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations. It's similarity search powers use cases such as product recommendations, fraud detection, image and video search, related document search, and more.
 
 ## Differences between `opensearch-jvector` and `k-NN`
 
@@ -21,7 +21,7 @@ The following table highlights the differences that matter most when choosing be
 | **Index update cost**    | Full rebuild required on merge                         | Incremental merges — no full rebuilds for updates                       |
 | **Memory efficiency**    | In-memory indexing                                     | DiskANN-style quantization                                              |
 
-## Usecases of plugin
+## Use cases of plugin
 
 `opensearch-jvector` is a strong choice when any of the following apply to your workload:
 
