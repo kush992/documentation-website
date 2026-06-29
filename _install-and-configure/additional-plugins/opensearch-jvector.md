@@ -14,12 +14,12 @@ The `opensearch-jvector` plugin enables running the nearest neighbor search on b
 
 The following table highlights the differences that matter most when choosing between the built-in k-NN plugin and `opensearch-jvector`:
 
-| Aspect                   | `k-NN`                                                   | `opensearch-jvector`                                                      |
-| :----------------------- | :----------------------------------------------------- | :---------------------------------------------------------------------- |
-| **Vector engines**       | `Nmslib`, `Faiss`, `lucene`                            | `jvector` (primary), `lucene`                                           |
+| Aspect                   | `k-NN`                                                 | `opensearch-jvector`                                                      |
+| :----------------------- | :----------------------------------------------------- | :------------------------------------------------------------------------ |
+| **Vector engines**       | `Nmslib`, `Faiss`, `lucene`                            | `jvector` (primary), `lucene`                                             |
 | **Concurrent ingestion** | Lucene index is not thread-safe for concurrent inserts | `jvector` supports concurrent inserts, enabling high-throughput ingestion |
-| **Index update cost**    | Full rebuild required on merge                         | Incremental merges — no full rebuilds for updates                       |
-| **Memory efficiency**    | In-memory indexing                                     | DiskANN-style quantization                                              |
+| **Index update cost**    | Full rebuild required on merge                         | Incremental merges — no full rebuilds for updates                         |
+| **Memory efficiency**    | In-memory indexing                                     | DiskANN-style quantization                                                |
 
 ## Use cases of plugin
 
