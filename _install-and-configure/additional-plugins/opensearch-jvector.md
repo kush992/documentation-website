@@ -6,7 +6,7 @@ nav_order: 30
 
 ---
 
-# `opensearch-jvector` plugin
+# `opensearch-jvector` Plugin
 
 The `opensearch-jvector` plugin enables running the nearest neighbor search on billions of documents across thousands of dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations.
 
