@@ -1,6 +1,6 @@
 ---
 layout: default
-title: OpenSearch-JVector
+title: Opensearch-jvector plugin
 parent: Installing plugins
 nav_order: 30
 
