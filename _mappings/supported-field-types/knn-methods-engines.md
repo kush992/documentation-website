@@ -23,6 +23,7 @@ OpenSearch supports the following engines:
 - [**Lucene**](#lucene-engine): The native search library, offering an HNSW implementation with efficient filtering capabilities
 - [**Faiss**](#faiss-engine) (Facebook AI Similarity Search): A comprehensive library implementing both the HNSW and IVF methods, with additional vector compression options
 - [**NMSLIB**](#nmslib-engine-deprecated) (Non-Metric Space Library): A legacy implementation of HNSW (now deprecated)
+- [**jvector**]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/): Available through the `opensearch-jvector` plugin (not included in the default distribution). Implements DiskANN-style approximate nearest neighbor search using the `disk_ann` method. Supports concurrent inserts, incremental merges, and native Product Quantization (PQ). Cannot be installed alongside `opensearch-knn`.
 
 ## Method definition example
 

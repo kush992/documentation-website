@@ -9,6 +9,86 @@ nav_order: 10
 
 You can perform efficient k-NN filtering with the `lucene` or `faiss` engines. 
 
+## Using `opensearch-jvector` with filters
+
+The [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin supports inline filtering inside the `knn` query clause using the same `filter` syntax as the Lucene and Faiss efficient filters. Place the `filter` inside the `knn` query to restrict candidates during graph traversal:
+
+```json
+POST /my-vectors/_search
+{
+  "size": 5,
+  "query": {
+    "knn": {
+      "embedding": {
+        "vector": [0.1, 0.2, 0.3, 0.4],
+        "k": 5,
+        "filter": {
+          "term": { "category": "technology" }
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+For boolean filters combining multiple conditions with a `jvector` index:
+
+```json
+POST /my-vectors/_search
+{
+  "size": 10,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "knn": {
+            "embedding": {
+              "vector": [0.1, 0.2, 0.3, 0.4],
+              "k": 10
+            }
+          }
+        }
+      ],
+      "filter": [
+        {
+          "term": { "category": "electronics" }
+        },
+        {
+          "range": {
+            "price": { "gte": 100, "lte": 500 }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+Note that because `post_filter` runs after the ANN search, the final result count may be fewer than `k` when the filter is restrictive. To compensate, set `k` to a value larger than the number of results you need:
+
+```json
+POST /my-vectors/_search
+{
+  "size": 10,
+  "query": {
+    "knn": {
+      "embedding": {
+        "vector": [0.1, 0.2, 0.3, 0.4],
+        "k": 50
+      }
+    }
+  },
+  "post_filter": {
+    "term": {
+      "category": "electronics"
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
 ## Lucene k-NN filter implementation
 
 OpenSearch version 2.2 introduced support for running k-NN searches with the Lucene engine using HNSW graphs. Starting with version 2.4, which is based on Lucene version 9.4, you can use Lucene filters for k-NN searches.
