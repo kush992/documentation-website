@@ -99,6 +99,31 @@ PUT /my-raw-vector-index
 ```
 {% include copy-curl.html %}
 
+**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, specify `"engine": "jvector"` with `"name": "disk_ann"` — the only supported method. The `jvector` engine is particularly beneficial for datasets that are continuously updated, as it supports concurrent inserts and incremental index updates that avoid full graph rebuilds on merge:
+
+```json
+PUT /my-raw-vector-index
+{
+  "settings": {
+    "index.knn": true
+  },
+  "mappings": {
+    "properties": {
+      "my_vector": {
+        "type": "knn_vector",
+        "dimension": 8,
+        "method": {
+          "name": "disk_ann",
+          "engine": "jvector",
+          "space_type": "l2"
+        }
+      }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
 ## Converting data to embeddings during ingestion
 
 To automatically generate embeddings during ingestion, configure an [ingest pipeline]({{site.url}}{{site.baseurl}}/api-reference/ingest-apis/index/) with the model ID of the embedding model. For more information about configuring a model, see [Integrating ML models]({{site.url}}{{site.baseurl}}/ml-commons-plugin/integrating-ml-models/).

@@ -15,6 +15,8 @@ Standard k-nearest neighbors (k-NN) search methods compute similarity using a br
 
 The approximate k-NN search methods in OpenSearch use approximate nearest neighbor (ANN) algorithms from the [NMSLIB](https://github.com/nmslib/nmslib), [Faiss](https://github.com/facebookresearch/faiss), and [Lucene](https://lucene.apache.org/) libraries to power k-NN search. These search methods employ ANN to improve search latency for large datasets. Of the three search methods OpenSearch provides, this method offers the best search scalability for large datasets. This approach is the preferred method when a dataset reaches hundreds of thousands of vectors.
 
+The [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin provides an additional `jvector` engine for approximate k-NN search, implementing DiskANN-style indexing in pure Java. Key advantages over the built-in engines include thread-safe concurrent ingestion, incremental index updates without full graph rebuilds, and native Product Quantization (PQ) with SIMD-accelerated asymmetric distance computation (ADC). Consider `jvector` when your dataset grows continuously or when you need high-recall compression at datasets larger than available memory.
+
 For information about the algorithms OpenSearch supports, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
 {: .note}
 
@@ -65,6 +67,50 @@ PUT my-knn-index-1
             }
           }
         }
+    }
+  }
+}
+```
+{% include copy-curl.html %}
+
+**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, use the `jvector` engine with the `disk_ann` method — the only method supported by `jvector`. It supports concurrent inserts and incremental merges, making it effective for high-update workloads:
+
+```json
+PUT my-knn-index-1
+{
+  "settings": {
+    "index": {
+      "knn": true
+    }
+  },
+  "mappings": {
+    "properties": {
+      "my_vector1": {
+        "type": "knn_vector",
+        "dimension": 2,
+        "space_type": "l2",
+        "method": {
+          "name": "disk_ann",
+          "engine": "jvector",
+          "parameters": {
+            "ef_construction": 128,
+            "m": 24
+          }
+        }
+      },
+      "my_vector2": {
+        "type": "knn_vector",
+        "dimension": 4,
+        "space_type": "innerproduct",
+        "method": {
+          "name": "disk_ann",
+          "engine": "jvector",
+          "parameters": {
+            "ef_construction": 256,
+            "m": 48
+          }
+        }
+      }
     }
   }
 }
