@@ -9,7 +9,7 @@ nav_order: 10
 
 You can perform efficient k-NN filtering with the `lucene`, `faiss` or `jvector` engines.
 
-## Using `opensearch-jvector` with filters
+## Using `k-NN` query with filters
 
 The [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin supports inline filtering inside the `knn` query clause using the same `filter` syntax as the Lucene and Faiss efficient filters. Place the `filter` inside the `knn` query to restrict candidates during graph traversal:
 
