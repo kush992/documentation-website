@@ -7,7 +7,7 @@ nav_order: 10
 
 # Efficient k-NN filtering
 
-You can perform efficient k-NN filtering with the `lucene` or `faiss` engines. 
+You can perform efficient k-NN filtering with the `lucene`, `faiss` or `jvector` engines.
 
 ## Using `opensearch-jvector` with filters
 

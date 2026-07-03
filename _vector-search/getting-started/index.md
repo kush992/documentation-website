@@ -95,7 +95,7 @@ PUT /hotels-index
 ```
 {% include copy-curl.html %}
 
-**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, you can use the `jvector` engine instead. It supports concurrent inserts during ingestion and incremental index updates without full rebuilds, making it a strong choice for continuously growing datasets:
+**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, you can use the `jvector` engine instead, for example:
 
 ```json
 PUT /hotels-index
