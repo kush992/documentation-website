@@ -95,30 +95,7 @@ PUT /hotels-index
 ```
 {% include copy-curl.html %}
 
-**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, you can use the `jvector` engine instead, for example:
-
-```json
-PUT /hotels-index
-{
-  "settings": {
-    "index.knn": true
-  },
-  "mappings": {
-    "properties": {
-      "location": {
-        "type": "knn_vector",
-        "dimension": 2,
-        "space_type": "l2",
-        "method": {
-          "name": "disk_ann",
-          "engine": "jvector"
-        }
-      }
-    }
-  }
-}
-```
-{% include copy-curl.html %}
+To use a different engine, see [Methods and engines]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-methods-engines/).
 
 Vector queries usually have a `size` > 0, so by default they don't enter the request cache. In OpenSearch 2.19 or later, if your workload mostly consists of vector queries, consider increasing the dynamic `indices.requests.cache.maximum_cacheable_size` cluster setting to a larger value, such as `256`. This allows queries with a `size` of up to 256 to enter the request cache, improving performance. For more information, see [Request cache]({{site.url}}{{site.baseurl}}/search-plugins/caching/request-cache).
 

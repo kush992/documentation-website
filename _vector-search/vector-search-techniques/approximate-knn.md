@@ -73,50 +73,6 @@ PUT my-knn-index-1
 ```
 {% include copy-curl.html %}
 
-**Using `opensearch-jvector`**: If you have the [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin installed, use the `jvector` engine with the `disk_ann` method — the only method supported by `jvector`. It supports concurrent inserts and incremental merges, making it effective for high-update workloads:
-
-```json
-PUT my-knn-index-1
-{
-  "settings": {
-    "index": {
-      "knn": true
-    }
-  },
-  "mappings": {
-    "properties": {
-      "my_vector1": {
-        "type": "knn_vector",
-        "dimension": 2,
-        "space_type": "l2",
-        "method": {
-          "name": "disk_ann",
-          "engine": "jvector",
-          "parameters": {
-            "ef_construction": 128,
-            "m": 24
-          }
-        }
-      },
-      "my_vector2": {
-        "type": "knn_vector",
-        "dimension": 4,
-        "space_type": "innerproduct",
-        "method": {
-          "name": "disk_ann",
-          "engine": "jvector",
-          "parameters": {
-            "ef_construction": 256,
-            "m": 48
-          }
-        }
-      }
-    }
-  }
-}
-```
-{% include copy-curl.html %}
-
 In the preceding example, both `knn_vector` fields are configured using method definitions. Additionally, `knn_vector` fields can be configured using models. For more information, see [k-NN vector]({{site.url}}{{site.baseurl}}/mappings/supported-field-types/knn-vector/).
 
 The `knn_vector` data type supports a vector of floats that can have a dimension count of up to 16,000 for the NMSLIB, Faiss, and Lucene engines, as set by the `dimension` mapping parameter.
