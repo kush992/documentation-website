@@ -9,86 +9,6 @@ nav_order: 10
 
 You can perform efficient k-NN filtering with the `lucene`, `faiss` or `jvector` engines.
 
-## Using `k-NN` query with filters
-
-The [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin supports inline filtering inside the `knn` query clause using the same `filter` syntax as the Lucene and Faiss efficient filters. Place the `filter` inside the `knn` query to restrict candidates during graph traversal:
-
-```json
-POST /my-vectors/_search
-{
-  "size": 5,
-  "query": {
-    "knn": {
-      "embedding": {
-        "vector": [0.1, 0.2, 0.3, 0.4],
-        "k": 5,
-        "filter": {
-          "term": { "category": "technology" }
-        }
-      }
-    }
-  }
-}
-```
-{% include copy-curl.html %}
-
-For boolean filters combining multiple conditions with a `jvector` index:
-
-```json
-POST /my-vectors/_search
-{
-  "size": 10,
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "knn": {
-            "embedding": {
-              "vector": [0.1, 0.2, 0.3, 0.4],
-              "k": 10
-            }
-          }
-        }
-      ],
-      "filter": [
-        {
-          "term": { "category": "electronics" }
-        },
-        {
-          "range": {
-            "price": { "gte": 100, "lte": 500 }
-          }
-        }
-      ]
-    }
-  }
-}
-```
-{% include copy-curl.html %}
-
-Note that because `post_filter` runs after the ANN search, the final result count may be fewer than `k` when the filter is restrictive. To compensate, set `k` to a value larger than the number of results you need:
-
-```json
-POST /my-vectors/_search
-{
-  "size": 10,
-  "query": {
-    "knn": {
-      "embedding": {
-        "vector": [0.1, 0.2, 0.3, 0.4],
-        "k": 50
-      }
-    }
-  },
-  "post_filter": {
-    "term": {
-      "category": "electronics"
-    }
-  }
-}
-```
-{% include copy-curl.html %}
-
 ## Lucene k-NN filter implementation
 
 OpenSearch version 2.2 introduced support for running k-NN searches with the Lucene engine using HNSW graphs. Starting with version 2.4, which is based on Lucene version 9.4, you can use Lucene filters for k-NN searches.
@@ -149,13 +69,14 @@ PUT /hotels-index
   }
 }
 ```
+
 {% include copy-curl.html %}
 
 ### Step 2: Add data to your index
 
 Next, add data to your index.
 
-The following request adds 12 documents that contain hotel location, rating, and parking information:  
+The following request adds 12 documents that contain hotel location, rating, and parking information:
 
 ```json
 POST /_bulk
@@ -184,6 +105,7 @@ POST /_bulk
 { "index": { "_index": "hotels-index", "_id": "12" } }
 { "location": [5.0, 1.0], "parking" : "true", "rating" : 3 }
 ```
+
 {% include copy-curl.html %}
 
 ### Step 3: Search your data with a filter
@@ -228,74 +150,66 @@ POST /hotels-index/_search
   }
 }
 ```
+
 {% include copy-curl.html %}
 
 The response returns the three hotels that are nearest to the search point and have met the filter criteria:
 
 ```json
 {
-  "took" : 47,
-  "timed_out" : false,
-  "_shards" : {
-    "total" : 1,
-    "successful" : 1,
-    "skipped" : 0,
-    "failed" : 0
-  },
-  "hits" : {
-    "total" : {
-      "value" : 3,
-      "relation" : "eq"
-    },
-    "max_score" : 0.72992706,
-    "hits" : [
-      {
-        "_index" : "hotels-index",
-        "_id" : "3",
-        "_score" : 0.72992706,
-        "_source" : {
-          "location" : [
-            4.9,
-            3.4
-          ],
-          "parking" : "true",
-          "rating" : 9
-        }
-      },
-      {
-        "_index" : "hotels-index",
-        "_id" : "6",
-        "_score" : 0.3012048,
-        "_source" : {
-          "location" : [
-            6.4,
-            3.4
-          ],
-          "parking" : "true",
-          "rating" : 9
-        }
-      },
-      {
-        "_index" : "hotels-index",
-        "_id" : "5",
-        "_score" : 0.24154587,
-        "_source" : {
-          "location" : [
-            3.3,
-            4.5
-          ],
-          "parking" : "true",
-          "rating" : 8
-        }
-      }
-    ]
-  }
+	"took": 47,
+	"timed_out": false,
+	"_shards": {
+		"total": 1,
+		"successful": 1,
+		"skipped": 0,
+		"failed": 0
+	},
+	"hits": {
+		"total": {
+			"value": 3,
+			"relation": "eq"
+		},
+		"max_score": 0.72992706,
+		"hits": [
+			{
+				"_index": "hotels-index",
+				"_id": "3",
+				"_score": 0.72992706,
+				"_source": {
+					"location": [4.9, 3.4],
+					"parking": "true",
+					"rating": 9
+				}
+			},
+			{
+				"_index": "hotels-index",
+				"_id": "6",
+				"_score": 0.3012048,
+				"_source": {
+					"location": [6.4, 3.4],
+					"parking": "true",
+					"rating": 9
+				}
+			},
+			{
+				"_index": "hotels-index",
+				"_id": "5",
+				"_score": 0.24154587,
+				"_source": {
+					"location": [3.3, 4.5],
+					"parking": "true",
+					"rating": 8
+				}
+			}
+		]
+	}
 }
 ```
 
 For more ways to construct a filter, see [Constructing a filter](#constructing-a-filter).
 
-## Faiss k-NN filter implementation 
+## Faiss k-NN filter implementation
 
 For k-NN searches, you can use `faiss` filters with an HNSW algorithm (OpenSearch version 2.9 and later) or IVF algorithm (OpenSearch version 2.10 and later).
 
@@ -313,13 +227,14 @@ The following flow chart outlines the Faiss algorithm.
 ![Faiss algorithm for filtering]({{site.url}}{{site.baseurl}}/images/faiss-algorithm.jpg)
 
 ### Disabling the exact search fallback
+
 **Introduced 3.5**
 {: .label .label-purple }
 
 When a Faiss efficient-filtered ANN search returns fewer than `k` results (R < k) even though more than `k` documents match the filter (P ≥ k), the algorithm falls back to an exact search over the filtered document IDs to ensure that `k` results are returned.
 
 For latency-sensitive workloads in which fewer than `k` results are acceptable, you can disable this fallback by setting the `index.knn.faiss.efficient_filter.disable_exact_search` index setting to `true`. When this setting is enabled, the search returns only approximate results and skips the additional exact search.
- For more information about this setting, see [Vector search settings]({{site.url}}{{site.baseurl}}/vector-search/settings/).
+For more information about this setting, see [Vector search settings]({{site.url}}{{site.baseurl}}/vector-search/settings/).
 
 ## Using a Faiss efficient filter
 
@@ -356,13 +271,14 @@ PUT /products-shirts
   }
 }
 ```
+
 {% include copy-curl.html %}
 
 ### Step 2: Add data to your index
 
 Next, add data to your index.
 
-The following request adds 12 documents that contain information about shirts, including their vector representation, size, and rating:  
+The following request adds 12 documents that contain information about shirts, including their vector representation, size, and rating:
 
 ```json
 POST /_bulk?refresh
@@ -392,6 +308,7 @@ POST /_bulk?refresh
 { "item_vector": [5.0, 1.0, 4.0], "size" : "large", "rating" : 3 }
 
 ```
+
 {% include copy-curl.html %}
 
 ### Step 3: Search your data with a filter
@@ -435,70 +352,222 @@ POST /products-shirts/_search
   }
 }
 ```
+
 {% include copy-curl.html %}
 
 The response returns the two matching documents:
 
 ```json
 {
-  "took": 2,
-  "timed_out": false,
-  "_shards": {
-    "total": 1,
-    "successful": 1,
-    "skipped": 0,
-    "failed": 0
-  },
-  "hits": {
-    "total": {
-      "value": 2,
-      "relation": "eq"
-    },
-    "max_score": 0.8620689,
-    "hits": [
-      {
-        "_index": "products-shirts",
-        "_id": "8",
-        "_score": 0.8620689,
-        "_source": {
-          "item_vector": [
-            2.4,
-            4,
-            3
-          ],
-          "size": "small",
-          "rating": 8
-        }
-      },
-      {
-        "_index": "products-shirts",
-        "_id": "6",
-        "_score": 0.029691212,
-        "_source": {
-          "item_vector": [
-            6.4,
-            3.4,
-            6.6
-          ],
-          "size": "small",
-          "rating": 9
-        }
-      }
-    ]
-  }
+	"took": 2,
+	"timed_out": false,
+	"_shards": {
+		"total": 1,
+		"successful": 1,
+		"skipped": 0,
+		"failed": 0
+	},
+	"hits": {
+		"total": {
+			"value": 2,
+			"relation": "eq"
+		},
+		"max_score": 0.8620689,
+		"hits": [
+			{
+				"_index": "products-shirts",
+				"_id": "8",
+				"_score": 0.8620689,
+				"_source": {
+					"item_vector": [2.4, 4, 3],
+					"size": "small",
+					"rating": 8
+				}
+			},
+			{
+				"_index": "products-shirts",
+				"_id": "6",
+				"_score": 0.029691212,
+				"_source": {
+					"item_vector": [6.4, 3.4, 6.6],
+					"size": "small",
+					"rating": 9
+				}
+			}
+		]
+	}
 }
 ```
 
 For more ways to construct a filter, see [Constructing a filter](#constructing-a-filter).
 
 ### ACORN filtering optimization
+
 Introduced 3.1
 {: .label .label-purple }
 The ACORN filtering optimization modifies the baseline algorithm to score and explore only vectors that match the filtering criteria. When filtering increases graph sparsity, the search expands to include neighbors of neighbors. The extent of this additional exploration depends on the percentage of neighbors filtered out, with more restrictive filters resulting in a wider search.
 
-The algorithm bypasses these optimizations entirely when filtering is minimal. By default, this threshold is 60%. Extended neighbor exploration occurs only if fewer than 90% of the current neighbors match the filter. 
+The algorithm bypasses these optimizations entirely when filtering is minimal. By default, this threshold is 60%. Extended neighbor exploration occurs only if fewer than 90% of the current neighbors match the filter.
 
 When [memory-optimized search]({{site.url}}{{site.baseurl}}/vector-search/optimizing-storage/memory-optimized-search/) is enabled, the efficient filter framework continues to apply filtering within HNSW. The ACORN filtering optimization is applied only when the number of filtered documents is 60% or fewer of the total number of documents in the current search space being considered by the HNSW algorithm.
+
+## Using a JVector efficient filter
+
+The [`opensearch-jvector`]({{site.url}}{{site.baseurl}}/install-and-configure/additional-plugins/opensearch-jvector/) plugin supports filtering using the `jvector` engine with the `disk_ann` method. An inline `filter` inside the `knn` query clause restricts candidates during graph traversal. Post-filtering via `post_filter` is also supported but may return fewer than `k` results when the filter is restrictive.
+
+In this example, you will create an index using the `jvector` engine and search for the three closest hotels that have high ratings and provide parking.
+
+### Step 1: Create a new index
+
+Create an index with a `knn_vector` field, specifying `jvector` as the engine and `disk_ann` as the method:
+
+```json
+PUT /hotels-index
+{
+  "settings": {
+    "index": {
+      "knn": true,
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  },
+  "mappings": {
+    "properties": {
+      "location": {
+        "type": "knn_vector",
+        "dimension": 2,
+        "method": {
+          "name": "disk_ann",
+          "space_type": "l2",
+          "engine": "jvector",
+          "parameters": {
+            "ef_construction": 100,
+            "m": 16
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+{% include copy-curl.html %}
+
+### Step 2: Add data to your index
+
+Add 12 documents containing hotel location, rating, and parking information:
+
+```json
+POST /_bulk
+{ "index": { "_index": "hotels-index", "_id": "1" } }
+{ "location": [5.2, 4.4], "parking" : "true", "rating" : 5 }
+{ "index": { "_index": "hotels-index", "_id": "2" } }
+{ "location": [5.2, 3.9], "parking" : "false", "rating" : 4 }
+{ "index": { "_index": "hotels-index", "_id": "3" } }
+{ "location": [4.9, 3.4], "parking" : "true", "rating" : 9 }
+{ "index": { "_index": "hotels-index", "_id": "4" } }
+{ "location": [4.2, 4.6], "parking" : "false", "rating" : 6}
+{ "index": { "_index": "hotels-index", "_id": "5" } }
+{ "location": [3.3, 4.5], "parking" : "true", "rating" : 8 }
+{ "index": { "_index": "hotels-index", "_id": "6" } }
+{ "location": [6.4, 3.4], "parking" : "true", "rating" : 9 }
+{ "index": { "_index": "hotels-index", "_id": "7" } }
+{ "location": [4.2, 6.2], "parking" : "true", "rating" : 5 }
+{ "index": { "_index": "hotels-index", "_id": "8" } }
+{ "location": [2.4, 4.0], "parking" : "true", "rating" : 8 }
+{ "index": { "_index": "hotels-index", "_id": "9" } }
+{ "location": [1.4, 3.2], "parking" : "false", "rating" : 5 }
+{ "index": { "_index": "hotels-index", "_id": "10" } }
+{ "location": [7.0, 9.9], "parking" : "true", "rating" : 9 }
+{ "index": { "_index": "hotels-index", "_id": "11" } }
+{ "location": [3.0, 2.3], "parking" : "false", "rating" : 6 }
+{ "index": { "_index": "hotels-index", "_id": "12" } }
+{ "location": [5.0, 1.0], "parking" : "true", "rating" : 3 }
+```
+
+{% include copy-curl.html %}
+
+### Step 3: Search your data with a filter
+
+Place the `filter` inside the `knn` query clause to restrict candidates during graph traversal. The following request searches for the top three hotels near `[5, 4]` that are rated between 8 and 10 and provide parking:
+
+```json
+POST /hotels-index/_search
+{
+  "size": 3,
+  "query": {
+    "knn": {
+      "location": {
+        "vector": [5, 4],
+        "k": 3,
+        "filter": {
+          "bool": {
+            "must": [
+              {
+                "range": {
+                  "rating": {
+                    "gte": 8,
+                    "lte": 10
+                  }
+                }
+              },
+              {
+                "term": {
+                  "parking": "true"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+{% include copy-curl.html %}
+
+### Step 4: Search your data with a post_filter
+
+You can also apply filtering after the ANN search using `post_filter`. Because `post_filter` runs after ANN retrieval, the final result count may be fewer than `k` when the filter is restrictive. To compensate, set `k` to a value larger than the number of results you need.
+
+The following request retrieves the 20 nearest hotels and then restricts the results to those rated 8 or above with parking:
+
+```json
+POST /hotels-index/_search
+{
+  "size": 3,
+  "query": {
+    "knn": {
+      "location": {
+        "vector": [5, 4],
+        "k": 20
+      }
+    }
+  },
+  "post_filter": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "rating": {
+              "gte": 8,
+              "lte": 10
+            }
+          }
+        },
+        {
+          "term": {
+            "parking": "true"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+{% include copy-curl.html %}
 
 ## Constructing a filter
 
@@ -562,6 +631,7 @@ POST /hotels-index/_search
       }
     }
   }
-} 
+}
 ```
+
 {% include copy-curl.html %}
