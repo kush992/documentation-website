@@ -6,20 +6,20 @@ nav_order: 30
 
 ---
 
-# `opensearch-jvector` Plugin
+# Opensearch-jvector plugin
 
 The `opensearch-jvector` plugin enables running the nearest neighbor search on billions of documents across thousands of dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations.
 
-## Differences between `opensearch-jvector` and `k-NN`
+## Differences between opensearch-jvector and k-NN
 
 The following table highlights the differences that matter most when choosing between the built-in `k-NN` plugin and `opensearch-jvector`:
 
-| Aspect                   | `k-NN`                                    | `opensearch-jvector`                                                      |
-| :----------------------- | :-------------------------------          | :------------------------------------------------------------------------ |
-| **Vector engines**       | `Nmslib`, `Faiss`, `lucene`               | `jvector` (primary), `lucene`                                             |
-| **Concurrent ingestion** | Supported by some vector engines          | `jvector` supports concurrent inserts, enabling high-throughput ingestion |
-| **Index update cost**    | Usually, full rebuild required on merge   | Incremental merges — no full rebuilds for updates                         |
-| **Memory efficiency**    | In-memory indexing                        | DiskANN-style quantization                                                |
+| Aspect                   | `k-NN`                                   | `opensearch-jvector`                                                      |
+| :----------------------- | :--------------------------------------- | :------------------------------------------------------------------------ |
+| **Vector engines**       | `Nmslib`, `Faiss`, `lucene`              | `jvector` (primary), `lucene`                                             |
+| **Concurrent ingestion** | Supported by some vector engines         | `jvector` supports concurrent inserts, enabling high-throughput ingestion |
+| **Index update cost**    | Usually a full rebuild required on merge | Incremental merges — no full rebuilds for updates                         |
+| **Memory efficiency**    | In-memory indexing                       | DiskANN-style quantization                                                |
 
 ## Use cases of plugin
 
@@ -32,18 +32,18 @@ Typical use cases include recommendation systems, image and video similarity sea
 
 ## Unique features
 
-- **DiskANN Implementation (Pure Java)** - based on `jvector` library, a pure Java implementation of DiskANN-style approximate nearest neighbour (ANN) search optimized for memory-constrained environments. It eliminates the need for native libraries such as `Faiss` and avoids the complexity and overhead associated with JNI, simplifying deployment and maintenance.
-- **Thread-Safe Design** - The index is fully thread-safe and supports concurrent updates and insertions with near-linear scalability as CPU cores increase. Unlike some other engines, which are not thread-safe at the index level, `jvector` enables high-throughput ingestion without relying on costly merge operations to achieve parallelism.
+- **DiskANN Implementation (Pure Java)** - Based on `jvector` library, a pure Java implementation of DiskANN-style approximate nearest neighbour (ANN) search optimized for memory-constrained environments. It eliminates the need for native libraries such as `Faiss` and avoids the complexity and overhead associated with JNI, simplifying deployment and maintenance.
+- **Scalable Thread-Safe Design** - The index is fully thread-safe and supports concurrent updates and insertions with near-linear scalability as CPU cores increase. Unlike some other engines, which are not thread-safe at the index level, `jvector` enables high-throughput ingestion without relying on costly merge operations to achieve parallelism.
 - **Quantized Index Construction** - `jvector` supports building indexes directly from quantized vectors, significantly reducing memory usage. This enables larger segment sizes, resulting in fewer segments overall and improved search performance.
-- **Quantization Refinement During Merges** - The system refines quantization `codebooks` incrementally during merge operations. This approach improves search accuracy and recall without requiring a complete recomputation of `codebooks`, reducing computational overhead.
-- **Incremental Index Updates** - `jvector` allows incremental insertion of vectors into existing persisted indices. This eliminates the need for full index rebuilds, providing substantial efficiency gains for workloads involving frequent updates, particularly for large graph-based indexes.
+- **Quantization Refinement During Merges** - The system refines quantization codebooks incrementally during merge operations. This approach improves search accuracy and recall without requiring a complete recomputation of codebooks, reducing computational overhead.
+- **Incremental Index Updates** - `jvector` allows incremental insertion of vectors into existing indexes. This eliminates the need for full index rebuilds, providing substantial efficiency gains for workloads involving frequent updates, particularly for large graph-based indexes.
 - **Quantized DiskANN with Reranking** - `jvector` supports DiskANN-style quantization combined with reranking, delivering significant performance improvements for datasets larger than available memory. This approach is particularly effective for large-scale deployments where traditional in-memory indexing is not feasible.
-- **Product Quantization (PQ) and Binary Quantization (BQ)** - `jvector` supports both PQ and BQ that Apache Lucene offers. PQ is implemented with high-performance asymmetric distance computation (ADC), including SIMD optimizations and support for separate `codebooks`. PQ at higher compression ratios (e.g., 64×) provides better recall compared to BQ at lower compression levels (e.g., 32×).
+- **Product Quantization (PQ) and Binary Quantization (BQ)** - `jvector` supports both PQ and BQ that Apache Lucene offers. PQ is implemented with high-performance asymmetric distance computation (ADC), including SIMD optimizations and support for separate codebooks. PQ at higher compression ratios (e.g., 64×) provides better recall compared to BQ at lower compression levels (e.g., 32×).
 - **Advanced Quantization Techniques** - `jvector` includes advanced capabilities such as Fused ADC, Non-Vector Quantization (NVQ), and Anisotropic PQ, enabling more efficient and accurate similarity computations beyond standard quantization approaches.
 
 ## Installation
 
-**1. Remove Existing k-NN Plugin** (make sure no `knn` enabled indices are created)
+**1. Remove Existing k-NN Plugin** (make sure no `knn` enabled indexes are created)
 
 ```bash
 bin/opensearch-plugin remove opensearch-knn
