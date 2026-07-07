@@ -157,53 +157,53 @@ The response returns the three hotels that are nearest to the search point and h
 
 ```json
 {
-	"took": 47,
-	"timed_out": false,
-	"_shards": {
-		"total": 1,
-		"successful": 1,
-		"skipped": 0,
-		"failed": 0
-	},
-	"hits": {
-		"total": {
-			"value": 3,
-			"relation": "eq"
-		},
-		"max_score": 0.72992706,
-		"hits": [
-			{
-				"_index": "hotels-index",
-				"_id": "3",
-				"_score": 0.72992706,
-				"_source": {
-					"location": [4.9, 3.4],
-					"parking": "true",
-					"rating": 9
-				}
-			},
-			{
-				"_index": "hotels-index",
-				"_id": "6",
-				"_score": 0.3012048,
-				"_source": {
-					"location": [6.4, 3.4],
-					"parking": "true",
-					"rating": 9
-				}
-			},
-			{
-				"_index": "hotels-index",
-				"_id": "5",
-				"_score": 0.24154587,
-				"_source": {
-					"location": [3.3, 4.5],
-					"parking": "true",
-					"rating": 8
-				}
-			}
-		]
-	}
+  "took": 47,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 3,
+      "relation": "eq"
+    },
+    "max_score": 0.72992706,
+    "hits": [
+      {
+        "_index": "hotels-index",
+        "_id": "3",
+        "_score": 0.72992706,
+        "_source": {
+          "location": [4.9, 3.4],
+          "parking": "true",
+          "rating": 9
+        }
+      },
+      {
+        "_index": "hotels-index",
+        "_id": "6",
+        "_score": 0.3012048,
+        "_source": {
+          "location": [6.4, 3.4],
+          "parking": "true",
+          "rating": 9
+        }
+      },
+      {
+        "_index": "hotels-index",
+        "_id": "5",
+        "_score": 0.24154587,
+        "_source": {
+          "location": [3.3, 4.5],
+          "parking": "true",
+          "rating": 8
+        }
+      }
+    ]
+  }
 }
 ```
 
@@ -359,43 +359,43 @@ The response returns the two matching documents:
 
 ```json
 {
-	"took": 2,
-	"timed_out": false,
-	"_shards": {
-		"total": 1,
-		"successful": 1,
-		"skipped": 0,
-		"failed": 0
-	},
-	"hits": {
-		"total": {
-			"value": 2,
-			"relation": "eq"
-		},
-		"max_score": 0.8620689,
-		"hits": [
-			{
-				"_index": "products-shirts",
-				"_id": "8",
-				"_score": 0.8620689,
-				"_source": {
-					"item_vector": [2.4, 4, 3],
-					"size": "small",
-					"rating": 8
-				}
-			},
-			{
-				"_index": "products-shirts",
-				"_id": "6",
-				"_score": 0.029691212,
-				"_source": {
-					"item_vector": [6.4, 3.4, 6.6],
-					"size": "small",
-					"rating": 9
-				}
-			}
-		]
-	}
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 1,
+    "successful": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": {
+      "value": 2,
+      "relation": "eq"
+    },
+    "max_score": 0.8620689,
+    "hits": [
+      {
+        "_index": "products-shirts",
+        "_id": "8",
+        "_score": 0.8620689,
+        "_source": {
+          "item_vector": [2.4, 4, 3],
+          "size": "small",
+          "rating": 8
+        }
+      },
+      {
+        "_index": "products-shirts",
+        "_id": "6",
+        "_score": 0.029691212,
+        "_source": {
+          "item_vector": [6.4, 3.4, 6.6],
+          "size": "small",
+          "rating": 9
+        }
+      }
+    ]
+  }
 }
 ```
 
