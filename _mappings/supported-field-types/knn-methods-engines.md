@@ -450,7 +450,7 @@ The default is `l2` when `space_type` is omitted.
 }
 ```
 
-## Choosing the right method
+## Choosing the right method and engine
 
 There are several options to choose from when building your `knn_vector` field. To select the correct method and parameters, you should first understand the requirements of your workload and what trade-offs you are willing to make. Factors to consider are (1) query latency, (2) query quality, (3) memory limits, and (4) indexing latency.
 
