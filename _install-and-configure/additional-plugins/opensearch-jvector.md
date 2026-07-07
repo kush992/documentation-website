@@ -8,7 +8,7 @@ nav_order: 30
 
 # Opensearch-jvector plugin
 
-The `opensearch-jvector` plugin enables running the nearest neighbor search on billions of documents across thousands of dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations.
+The `opensearch-jvector` plugin enables running the nearest neighbor search on billions of documents with upto 16,000 dimensions with the same ease as running any regular OpenSearch query. Aggregations and filter clauses can be applied to further refine similarity search operations.
 
 ## Differences between opensearch-jvector and k-NN
 
@@ -33,13 +33,13 @@ Typical use cases include recommendation systems, image and video similarity sea
 ## Unique features
 
 - **DiskANN Implementation (Pure Java)** - Based on `jvector` library, a pure Java implementation of DiskANN-style approximate nearest neighbour (ANN) search optimized for memory-constrained environments. It eliminates the need for native libraries such as `Faiss` and avoids the complexity and overhead associated with JNI, simplifying deployment and maintenance.
-- **Scalable Thread-Safe Design** - The index is fully thread-safe and supports concurrent updates and insertions with near-linear scalability as CPU cores increase. Unlike some other engines, which are not thread-safe at the index level, `jvector` enables high-throughput ingestion without relying on costly merge operations to achieve parallelism.
+- **Scalable Thread-Safe Design** - The index is fully thread-safe and supports concurrent updates and insertions with near-linear scalability as CPU cores increase. The underlying Jvector library enables high-throughput ingestion without relying on costly merge operations to achieve parallelism.
 - **Quantized Index Construction** - `jvector` supports building indexes directly from quantized vectors, significantly reducing memory usage. This enables larger segment sizes, resulting in fewer segments overall and improved search performance.
 - **Quantization Refinement During Merges** - The system refines quantization codebooks incrementally during merge operations. This approach improves search accuracy and recall without requiring a complete recomputation of codebooks, reducing computational overhead.
 - **Incremental Index Updates** - `jvector` allows incremental insertion of vectors into existing indexes. This eliminates the need for full index rebuilds, providing substantial efficiency gains for workloads involving frequent updates, particularly for large graph-based indexes.
 - **Quantized DiskANN with Reranking** - `jvector` supports DiskANN-style quantization combined with reranking, delivering significant performance improvements for datasets larger than available memory. This approach is particularly effective for large-scale deployments where traditional in-memory indexing is not feasible.
-- **Product Quantization (PQ) and Binary Quantization (BQ)** - `jvector` supports both PQ and BQ that Apache Lucene offers. PQ is implemented with high-performance asymmetric distance computation (ADC), including SIMD optimizations and support for separate codebooks. PQ at higher compression ratios (e.g., 64×) provides better recall compared to BQ at lower compression levels (e.g., 32×).
-- **Advanced Quantization Techniques** - `jvector` includes advanced capabilities such as Fused ADC, Non-Vector Quantization (NVQ), and Anisotropic PQ, enabling more efficient and accurate similarity computations beyond standard quantization approaches.
+- **Product Quantization (PQ) and Binary Quantization (BQ)** - `jvector` supports both PQ and BQ. PQ support is implemented with high-performance SIMD optimizations and support for separate codebooks. PQ at higher compression ratios provides better recall compared to BQ at lower compression levels.
+- **Advanced Quantization Techniques** - `jvector` includes advanced capabilities such as Non-Vector Quantization (NVQ), and Anisotropic PQ, enabling more efficient and accurate similarity computations beyond standard quantization approaches.
 
 ## Installation
 
@@ -57,12 +57,12 @@ bin/opensearch-plugin install opensearch-jvector
 
 ## OpenSearch compatible features
 
-- Product Quantization (since: 3.2.0.0)
-- MMR Search (since: 3.6.0.0)
-- Derived Sources (since: 3.6.0.0)
+- Product Quantization (since: 3.5.0)
+- MMR Search (since: 3.6.0)
+- Derived Sources (since: 3.6.0)
 
 ## Limitations
 
 - `opensearch-jvector` plugin is not part of the default OpenSearch distribution
 - `opensearch-knn` and `opensearch-jvector` cannot be installed simultaneously
-- `opensearch-jvector` is not recognized by `neural-search` plugin, as such hybrid search is not supported yet
+- `opensearch-jvector` is not recognized by the upstream version of `neural-search` plugin. 
