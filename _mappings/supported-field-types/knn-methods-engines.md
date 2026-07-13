@@ -407,7 +407,7 @@ The `jvector` engine supports the following method.
 
 Method name | Requires training | Supported spaces
 :--- | :--- | :---
-`disk_ann` | No | `l2`, `cosinesimil`, `innerproduct`, `l1`, `linf`
+`disk_ann` | No | `l2`, `cosinesimil`, `innerproduct`
 
 ### Method parameters
 
@@ -431,8 +431,6 @@ The `space_type` field controls which distance metric is used.
 | `l2` | Euclidean distance (L2 norm) | General-purpose; raw coordinates |
 | `cosinesimil` | Cosine similarity | Text embeddings; direction matters more than magnitude |
 | `innerproduct` | Dot product (inner product) | Embeddings where magnitude carries meaning (e.g., biencoder models) |
-| `l1` | Manhattan distance | Robust to outliers |
-| `linf` | Chebyshev distance | Maximum per-dimension deviation |
 
 The default is `l2` when `space_type` is omitted.
 
