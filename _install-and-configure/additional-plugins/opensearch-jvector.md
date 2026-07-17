@@ -38,7 +38,7 @@ Typical use cases include recommendation systems, image and video similarity sea
 - **Quantization Refinement During Merges** - The system refines quantization codebooks incrementally during merge operations. This approach improves search accuracy and recall without requiring a complete recomputation of codebooks, reducing computational overhead.
 - **Incremental Index Updates** - `jvector` allows incremental insertion of vectors into existing indexes. This eliminates the need for full index rebuilds, providing substantial efficiency gains for workloads involving frequent updates, particularly for large graph-based indexes.
 - **Quantized DiskANN with Reranking** - `jvector` supports DiskANN-style quantization combined with reranking, delivering significant performance improvements for datasets larger than available memory. This approach is particularly effective for large-scale deployments where traditional in-memory indexing is not feasible.
-- **Product Quantization (PQ)** - PQ support is implemented with high-performance SIMD optimizations and support for separate codebooks. PQ at higher compression ratios provides better recall at lower compression levels.
+- **Product Quantization (PQ)** - PQ is implemented with high-performance SIMD optimizations and separate codebooks to enable fast vector searches with low memory usage.
 - **Advanced Quantization Techniques** - `jvector` includes advanced capabilities such as Non-Vector Quantization (NVQ), and Anisotropic PQ, enabling more efficient and accurate similarity computations beyond standard quantization approaches.
 
 ## Installation
