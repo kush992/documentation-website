@@ -43,9 +43,10 @@ Typical use cases include recommendation systems, image and video similarity sea
 
 ## Installation
 
-**1. Remove Existing k-NN Plugin** (make sure no `knn` enabled indexes are created)
+**1. Remove Existing k-NN and neural-search Plugins** (make sure no `knn` enabled indexes are created)
 
 ```bash
+bin/opensearch-plugin remove opensearch-neural-search
 bin/opensearch-plugin remove opensearch-knn
 ```
 
